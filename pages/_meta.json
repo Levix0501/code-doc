@@ -10,5 +10,9 @@
   "source-code": {
     "title": "源码阅读",
     "type": "page"
+  },
+  "rust": {
+    "title": "Rust",
+    "type": "page"
   }
 }

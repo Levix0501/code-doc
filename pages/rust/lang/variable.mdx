@@ -1,0 +1,49 @@
+# 变量
+
+变量用来存储值
+
+## 变量命名
+
+1. Rust 变量的基本命名规范见 [RFC430](https://github.com/rust-lang/rfcs/blob/master/text/0430-finalizing-naming-conventions.md)
+2. 和其他语言一样，关键字不可用作变量或函数的命名
+
+## 变量绑定
+
+在 Rust 中，声明变量并为变量赋值的写法如下：
+```rs
+let a = "hello world";
+```
+为变量赋值的过程称为`变量绑定`
+
+## 变量可变性
+
+Rust 支持声明`可变变量`(immutable variable)和`不可变变量`(mutable variable)，前者为编程提供了灵活性，后者为编程提供了安全性
+
+### 不可变变量
+
+将变量声明为`不可变`可以避免一些多余的运行期(runtime)检查
+
+Rust 的变量默认是`不可变`的
+
+如果变量 `a` 不可变，那么一旦为它绑定值，就不能再修改它
+
+```rs
+let a = 0;
+a = 1;
+```
+
+如上代码将会报错：
+```sh
+cannot assign twice to immutable variable `a`
+```
+
+### 可变变量
+
+声明变量时在变量名前加上`mut`，变量就会成为可变变量
+
+```rs
+let mut a = 0;
+a = 1; // ✅
+```
+
+## 变量解构
