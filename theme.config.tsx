@@ -15,6 +15,8 @@ const config: DocsThemeConfig = {
       </>
     );
   },
+  editLink: { text: '编辑此页面' },
+  feedback: { content: '问题反馈 →' },
   sidebar: { defaultMenuCollapseLevel: 1, toggleButton: true },
 };
 
