@@ -1,0 +1,62 @@
+import { Callout } from 'nextra/components';
+
+# 函数
+
+函数用 `fn` 表示，函数名使用[蛇形命名法](https://github.com/rust-lang/rfcs/blob/master/text/0430-finalizing-naming-conventions.md)
+
+```rs
+fn add_two() {}
+```
+
+```rs
+fn main() {
+    add_two(); // 函数调用
+}
+```
+
+## 函数参数
+
+Rust 是强类型语言，因此函数如果有参数，需要为每一个参数添加[类型标注](/rust/lang/scalar-types#类型标注)
+
+```rs
+fn add_two(a: i32, b: i32) {}
+
+fn main() {
+    add_two(5, 6);
+    add_two(5, 6.1); // 错误！参数类型必须和标注的类型匹配
+}
+```
+
+## 函数返回
+
+如果函数不显式返回值，则会隐式返回[单元类型`()`](/rust/lang/scalar-types/unit)，比如：
+
+```rs
+fn main() {} // 隐式返回()
+
+fn hello() {} // 隐式返回()
+```
+
+如果函数显式返回值，需要显式标注类型，如下`-> i32`
+
+```rs
+fn count() -> i32 {
+
+}
+```
+
+并且函数必须返回对应类型的值，有两种返回方式：
+
+```rs
+fn count() -> i32 {
+    return 10; // 使用 return 返回
+}
+
+fn count(a: i32, b: i32) -> i32 {
+    10 // 不用 return，直接写需要返回的表达式即可
+}
+```
+
+<Callout>
+  注意第二种方式的表达式后不能有`;`，添加`;`以后，`10;`变成语句，[语句不返回值](/rust/lang/statement-expression)
+</Callout>

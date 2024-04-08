@@ -1,3 +1,6 @@
 {
-  "variable": "变量"
+  "variable": "变量",
+  "scalar-types": "基本数据类型",
+  "statement-expression": "语句和表达式",
+  "function": "函数"
 }
