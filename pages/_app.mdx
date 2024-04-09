@@ -1,0 +1,13 @@
+import { GoogleTagManager } from '@next/third-parties/google';
+
+export default function MyApp({ Component, pageProps }) {
+
+return (
+
+<>
+  <Component {...pageProps} />
+  {process.env.NODE_ENV !== 'development' && (
+    <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
+  )}
+</>
+); }
