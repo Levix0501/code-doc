@@ -1,6 +1,9 @@
 {
   "variable": "变量",
   "scalar-types": "基本数据类型",
+  "variable-constant": "变量与常量",
   "statement-expression": "语句和表达式",
-  "function": "函数"
+  "function": "函数",
+  "basic-math-operations": "基本数学运算",
+  "bit-operations": "位运算"
 }

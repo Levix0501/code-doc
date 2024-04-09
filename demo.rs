@@ -1,1 +1,7 @@
-fn add() -> i32 {}
+fn main() {
+    const a: i32 = 1;
+
+    let c;
+    c = 1;
+    c = 2;
+}

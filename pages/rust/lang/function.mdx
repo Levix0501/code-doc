@@ -60,3 +60,25 @@ fn count(a: i32, b: i32) -> i32 {
 <Callout>
   注意第二种方式的表达式后不能有`;`，添加`;`以后，`10;`变成语句，[语句不返回值](/rust/lang/statement-expression)
 </Callout>
+
+```rs
+fn add_two(i: i32, j: i32) -> i32 {
+    i + j
+}
+```
+
+![function](/function-add-two.png 'function')
+
+## 函数与表达式
+
+Rust 中函数就是[表达式](/rust/lang/statement-expression#表达式)，可以把函数返回的值赋给变量
+
+```rs
+fn main() {
+    let sum = add_two(5, 5);
+}
+
+fn add_two(i: i32, j: i32) -> i32 {
+    i + j
+}
+```
