@@ -30,7 +30,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "demo.trs"
+    "demo.trs",
+    "pages/_app.mdx"
   ],
   "exclude": ["node_modules"]
 }

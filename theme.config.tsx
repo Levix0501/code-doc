@@ -1,7 +1,7 @@
 import { DocsThemeConfig, useConfig } from 'nextra-theme-docs';
 
 const config: DocsThemeConfig = {
-  logo: <div>Codedoc</div>,
+  logo: <div>FECoder</div>,
   project: {
     link: 'https://github.com/Levix0501/code-doc',
   },
