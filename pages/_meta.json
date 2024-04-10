@@ -3,6 +3,26 @@
     "type": "page",
     "display": "hidden"
   },
+  "javascript": {
+    "title": "JavaScript",
+    "type": "menu",
+    "items": {
+      "prototype": {
+        "title": "原型和原型链",
+        "href": "/javascript/prototype"
+      }
+    }
+  },
+  "frameworks": {
+    "title": "框架",
+    "type": "menu",
+    "items": {
+      "vue": {
+        "title": "Vue",
+        "href": "/frameworks/vue/reactivity"
+      }
+    }
+  },
   "package-managers": {
     "title": "包管理器",
     "type": "menu",
