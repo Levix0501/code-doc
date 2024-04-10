@@ -1,4 +1,8 @@
 {
+  "react": {
+    "display": "hidden",
+    "type": "page"
+  },
   "vue": {
     "display": "hidden",
     "type": "page"

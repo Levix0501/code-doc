@@ -17,6 +17,10 @@
     "title": "框架",
     "type": "menu",
     "items": {
+      "react": {
+        "title": "React",
+        "href": "/frameworks/react/react-fiber"
+      },
       "vue": {
         "title": "Vue",
         "href": "/frameworks/vue/reactivity"
