@@ -1,0 +1,68 @@
+# 前端模块化概述
+
+前端模块化是指将代码分解成独立的、可复用的模块，以便更好地组织、维护和扩展代码
+
+## 发展历史
+
+在没有`CommonJS`(CMJ)和`ES Module`(ESM)等模块化规范前，我们想要达到模块化的效果有以下几种方式
+
+### 全局函数
+
+一个函数就是一个模块
+
+```html
+<script>
+  function m1() {}
+  function m2() {}
+</script>
+```
+
+**缺点**
+
+1. 污染了全局变量
+2. 无法保证模块之间不会发生命名冲突
+
+### 命名空间模式
+
+一个对象就是一个模块
+
+在全局对象下新建一个对象属性来存放模块，需要手动保证模块命名不冲突，模块内的属性就不会冲突
+
+```html
+<script>
+  var __Module = {
+    sum: 0,
+    f1: function () {},
+    f2: function () {},
+  };
+</script>
+```
+
+**缺点**
+
+1. 会暴露所有模块成员
+2. 内部状态可能会被改写 (`window.__Module.属性名`可以直接修改模块)
+
+### 立即执行函数(IIFE)
+
+通过`IIFE`(Immediately Invoked Function Expression)，利用`闭包`来创建私有变量
+
+```html
+<script>
+  var module1 = (function () {
+    var _sum = 0; // 私有变量
+    var foo1 = function () {};
+    var foo2 = function () {};
+    return {
+      foo1: foo1,
+      foo2: foo2,
+    };
+  })();
+  /// 此时外部无法访问 module1._sum
+</script>
+```
+
+虽然能解决全局污染和私有性的问题，但是和前两种方式一样存在硬伤：
+
+1. 代码阅读维护困难
+2. 没有完善的依赖管理、模块加载机制

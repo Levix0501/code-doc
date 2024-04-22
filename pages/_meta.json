@@ -23,6 +23,16 @@
       }
     }
   },
+  "front-end-engineering": {
+    "title": "前端工程化",
+    "type": "menu",
+    "items": {
+      "module": {
+        "title": "模块化",
+        "href": "/front-end-engineering/module/introduction"
+      }
+    }
+  },
   "package-managers": {
     "title": "包管理器",
     "type": "menu",
