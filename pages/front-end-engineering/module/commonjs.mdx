@@ -50,10 +50,41 @@ This specification leaves the following important points of interoperability uns
 1. Whether modules are stored with a database, file system, or factory functions, or are interchangeable with link libraries.
 2. Whether a PATH is supported by the module loader for resolving module identifiers.
 
-## CommonJS 如何实现规范化
+## CommonJS 规范内容综述
 
 `Node`天生支持 CMJ 标准，它规定：
 
 1. 一个 js 文件就是一个 CMJ 模块，通过 `node` 命令运行的模块称为`入口模块`
 2. 模块中所有全局定义的变量、函数，不会互相污染
-3.
+3. 使用 `exports` 来导出模块中的内容，供其它模块使用
+4. 使用 `requre` 来导入其它模块导出的内容
+5. CMJ 模块是同步加载的，模块在导入时会阻塞执行，直到模块完全加载并可用
+6. 模块可以多次加载，首次加载的时候会运行模块并对输出结果进行缓存，再次加载时会直接使用缓存中的结果
+
+## 模块导出
+
+可以使用 `module.exports` 导出模块中的函数
+
+```js
+// util.js
+const getSum = (a, b) => a + b;
+module.exports = { getSum };
+```
+
+也可以使用 `exports` 导出
+
+```js
+// util.js
+const getSum = (a, b) => a + b;
+exports.getSum = getSum;
+```
+
+## 模块导入
+
+使用 `require` 导入模块
+
+```js
+// index.js
+const util = require('./util.js');
+const sum = util.getSum(1, 2);
+```

@@ -1,0 +1,132 @@
+# node 如何实现 CommonJS
+
+## require、module、exports 是什么？
+
+```js
+console.log(module);
+console.log(require);
+console.log(exports);
+console.log(module.exports === exports);
+```
+
+打印结果
+
+```
+Module {
+    id: ...,
+    path: ...,
+    exports: ...,
+    filename: ...,
+    ...
+}
+
+[Function: require] {
+    ...
+}
+
+{}
+
+true
+```
+
+1. module 是一个 Module 对象，记录当前模块信息，
+2. require 是一个方法，用来导入模块
+3. exports 是一个对象，包含当前模块导出的内容
+4. module 对象的 exports 属性指向 exports 对象
+
+## 为什么可以直接使用 require、module、exports？
+
+因为 node 会执行代码之前会先运行`包装`函数，来对代码块进行首尾包装，包装函数类似于：
+
+```js
+function wrap(script) {
+  return `(function (exports, require, module) { 
+        ${script}
+    })`;
+}
+```
+
+模拟包装函数执行
+
+```js
+const moduleIndexFunction = wrap(`
+    const util = require('./util.js');
+    const sum = util.getSum(1, 2);
+`);
+
+const moduleUtilFunction = wrap(`
+    const getSum = (a, b) => a + b;
+    exports.getSum = getSum;
+`);
+```
+
+得到
+
+```js
+const moduleIndexFunction = `(function (exports, require, module) {
+  const util = require('./util.js');
+  const sum = util.getSum(1, 2);
+})`;
+
+const moduleUtilFunction = `(function (exports, require, module) {
+  const getSum = (a, b) => a + b;
+  exports.getSum = getSum;
+})`;
+```
+
+在模块加载的时候，会传入`require`、`module`、`exports`等参数，模拟效果如下：
+
+```js
+// util.js
+(function (exports, require, module) {
+  const getSum = (a, b) => a + b;
+  exports.getSum = getSum;
+})(exports, require, module);
+```
+
+## require 文件加载流程
+
+require 导入模块的情况有 3 种
+
+```js
+const fs = require('fs'); // ① node 核心模块
+const sayName = require('./hello.js'); // ② 文件模块
+const crypto = require('crypto-js'); // ③ 第三方模块
+```
+
+require 接受唯一参数作为找到模块的标识符
+
+### 标识符原则
+
+#### 核心模块
+
+像`fs`、`http`、`path`等标识符，会被作为 nodejs 的核心模块
+
+#### 文件模块
+
+1. `./` 和 `../` 作为相对路径的文件模块
+2. `/` 作为绝对路径的文件模块
+3. require 会将路径转换成真实路径来找到模块
+
+#### 第三方模块
+
+1. 非路径形式也非核心模块的模块，将作为自定义模块
+2. require 从当前目录 node_modules 开始，依次向上递归在每一级目录的 node_modules 中查找，直至根目录的 node_modules
+3. 找到模块目录后，会查找`package.json`的 main 属性指向的文件，如果未找到 package.json 或 main 属性，会依次查 `index.js` 、`index.json`、`index.node`
+
+### 模块执行顺序
+
+CommonJS 模块会同步加载并执行，显然是`深度优先遍历`
+
+```js
+// a.js
+const { fb } = require('./b');
+console.log('我是 a 文件');
+exports.fa = () => {
+  console.log(fb());
+};
+
+// b.js
+const { fa } = require('./a');
+console.log('我是 b 文件');
+```
