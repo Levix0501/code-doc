@@ -37,6 +37,16 @@
       }
     }
   },
+  "source-code": {
+    "title": "源码系列",
+    "type": "menu",
+    "items": {
+      "zustand": {
+        "title": "zustand",
+        "href": "/source-code/zustand/handwriting"
+      }
+    }
+  },
   "package-managers": {
     "title": "包管理器",
     "type": "menu",
@@ -59,10 +69,7 @@
     "title": "Leetcode",
     "type": "page"
   },
-  "source-code": {
-    "title": "源码阅读",
-    "type": "page"
-  },
+
   "rust": {
     "title": "Rust",
     "type": "menu",

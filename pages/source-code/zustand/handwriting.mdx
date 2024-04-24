@@ -1,0 +1,73 @@
+import Image from 'next/image';
+import img1 from './01.png';
+
+# 手写 zustand
+
+## 项目搭建
+
+cra 创建 react 项目
+
+```sh
+npx create-react-app my-zustand
+```
+
+运行
+
+```sh
+npm start
+```
+
+安装 zustand
+
+```sh
+npm i zustand
+```
+
+使用 zustand
+
+```js
+// App.js
+import { create } from 'zustand';
+
+const useUserStore = create((set) => ({
+  firstName: '',
+  lastName: '',
+  updateFirstName: (firstName) => set(() => ({ firstName })),
+  updateLastName: (lastName) => set(() => ({ lastName })),
+}));
+
+function App() {
+  const { firstName, updateFirstName } = useUserStore((state) => state);
+  return (
+    <div
+      style={{
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <div style={{ marginRight: '10px' }}>
+        <div>firstName: {firstName}</div>
+        <input onChange={(e) => updateFirstName(e.currentTarget.value)} />
+      </div>
+
+      <LastName />
+    </div>
+  );
+}
+
+function LastName() {
+  const { lastName, updateLastName } = useUserStore((state) => state);
+  return (
+    <div>
+      <div>lastName: {lastName}</div>
+      <input onChange={(e) => updateLastName(e.currentTarget.value)} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+<Image src={img1} width={920} height={200} alt="" />
