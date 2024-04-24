@@ -1,4 +1,4 @@
-console.log(module);
-console.log(require);
-console.log(exports);
-console.log(module.exports === exports);
+const a = require('./a');
+const b = require('./b');
+
+console.log('node 入口文件');

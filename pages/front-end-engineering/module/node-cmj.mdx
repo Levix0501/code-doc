@@ -84,7 +84,7 @@ const moduleUtilFunction = `(function (exports, require, module) {
 })(exports, require, module);
 ```
 
-## require 文件加载流程
+## 模块标识符
 
 require 导入模块的情况有 3 种
 
@@ -96,37 +96,202 @@ const crypto = require('crypto-js'); // ③ 第三方模块
 
 require 接受唯一参数作为找到模块的标识符
 
-### 标识符原则
-
-#### 核心模块
+### 核心模块
 
 像`fs`、`http`、`path`等标识符，会被作为 nodejs 的核心模块
 
-#### 文件模块
+### 文件模块
 
 1. `./` 和 `../` 作为相对路径的文件模块
 2. `/` 作为绝对路径的文件模块
 3. require 会将路径转换成真实路径来找到模块
 
-#### 第三方模块
+### 第三方模块
 
 1. 非路径形式也非核心模块的模块，将作为自定义模块
 2. require 从当前目录 node_modules 开始，依次向上递归在每一级目录的 node_modules 中查找，直至根目录的 node_modules
 3. 找到模块目录后，会查找`package.json`的 main 属性指向的文件，如果未找到 package.json 或 main 属性，会依次查 `index.js` 、`index.json`、`index.node`
 
-### 模块执行顺序
+## 模块执行顺序
 
-CommonJS 模块会同步加载并执行，显然是`深度优先遍历`
+CommonJS 模块会同步加载并执行，遵循`深度优先遍历`
 
 ```js
 // a.js
-const { fb } = require('./b');
+require('./c');
 console.log('我是 a 文件');
+
+// b.js
+console.log('我是 b 文件');
+
+// c.js
+console.log('我是 c 文件');
+
+// index.js
+require('./a');
+require('./b');
+console.log('node 入口文件');
+```
+
+打印结果
+
+```
+我是 c 文件
+我是 a 文件
+我是 b 文件
+node 入口文件
+```
+
+## require 函数的模拟实现
+
+```js
+// 用于缓存已加载过的模块
+const cache = {};
+
+// id 为路径标识符
+function require(id) {
+  // 从缓存中查找该模块
+  const cachedModule = cache[id];
+
+  // 若已加载则直接取走缓存的 exports 对象
+  if (cachedModule) {
+    return cachedModule.exports;
+  }
+
+  // 创建当前模块的 Module 对象
+  const module = {
+    id,
+    exports: {},
+    loaded: false, // 用于表示当前模块是否被加载
+    //...
+  };
+
+  // 将当前模块存入缓存
+  cache[id] = module;
+
+  // 对模块进行包装后运行
+  (function (exports, require, module) {
+    // 模块中的代码
+  })(module.exports, require, module);
+
+  module.loaded = true; // 加载完成
+
+  // 返回 exports 对象
+  return module.exports;
+}
+```
+
+## require 如何避免重复加载
+
+首次加载的模块的 Module 对象会被缓存，下次 require 时会从缓存中直接获取 Module 对象的 exports 对象
+
+## require 如何避免循环引用
+
+```js
+// a.js
+const bExports = require('./b');
+console.log('我是 a 文件');
+exports.fa = function () {
+  console.log('执行 fa');
+};
+
+// b.js
+const aExports = require('./a');
+console.log('我是 b 文件');
+module.exports = { say: 'Hello World!' };
+
+// index.js
+const aExports = require('./a');
+const bExports = require('./b');
+console.log('node 入口文件');
+```
+
+**node index.js 执行步骤**
+
+1. 执行 `require('./a')`
+2. 创建 a 的 Module 对象，将 module.exports 存入缓存
+3. 执行 a.js 中的代码
+4. 执行 `require('./b')`
+5. 创建 b 的 Module 对象，将 module.exports 存入缓存
+6. 执行 b.js 中的代码
+7. 执行 `require('./a')`，从缓存中取出模块 a 的 module.exports 对象赋给 `aExports`
+8. 执行 `console.log('我是 b 文件');`
+9. 让 b 模块的 module.exports 指向一个新对象 `{ say: 'Hello World!' }`
+10. 回到 a.js，将 b 的 module.exports 对象赋给 `bExports`
+11. 执行 `console.log('我是 a 文件');`
+12. 给 a 的 module.exports 对象添加一个方法 `fa`
+13. 回到 index.js，将 a 的 module.exports 对象赋给 `aExports`
+14. 执行 `require('./b')`，从缓存中取出 b 的 module.exports 对象赋给 `bExports`
+15. 执行 `console.log('node 入口文件');`
+
+最终打印结果
+
+```
+我是 b 文件
+我是 a 文件
+node 入口文件
+```
+
+需要注意的是，步骤 6 执行时，模块 a 的 exports 对象中还未添加 fa 方法，如果此时调用 fa 会报错
+
+require 通过缓存来避免重复执行代码，从而避免循环引用
+
+## require 动态加载
+
+require 本质上是一个函数，因此可以在任意地方调用，即在任意上下文动态加载模块
+
+```js
+// a.js
 exports.fa = () => {
-  console.log(fb());
+  const b = require('./b');
+};
+
+// b.js
+module.exports = { b: '123' };
+
+// index.js
+const { fa } = require('./a');
+fa();
+```
+
+如上，在 fa 调用时动态加载模块 b
+
+## 使用 exports 导出内容
+
+```js
+// a.js
+exports.fa = () => {
+  console.log('执行 fa');
 };
 
 // b.js
 const { fa } = require('./a');
-console.log('我是 b 文件');
+fa();
+```
+
+可以通过在 exports 对象上添加属性来导出内容
+
+## exports 的本质
+
+在模块被首位包装后执行时，`exports` 作为一个参数被传入模块，此时它指向 `module.exports`。所以在 `exports` 上添加属性，相当于给 `module.exports` 添加属性，在 `require` 执行完以后，`module.exports` 对象会被返回
+
+## 为什么不能给 exports 赋值来导出内容
+
+```js
+exports = { a: '123' };
+```
+
+如果直接将一个对象赋给 exports，会导致 exports 指向一个新对象，而 `require` 返回的是 `module.exports`，和 exports 指向的新对象无关
+
+## module.exports 导出内容
+
+`require` 最终返回的是 `module.exports`，因此在模块中可以给 `module.exports` 赋值来导出内容
+
+```js
+let a = 1;
+module.exports = a; // 导出函数
+
+module.exports = [1, 2, 3]; // 导出数组
+
+module.exports = function () {}; //导出方法
 ```
