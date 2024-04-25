@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import img1 from './01.png';
+import img2 from './02.png';
 
 # 手写 zustand
 
@@ -71,3 +72,140 @@ export default App;
 ```
 
 <Image src={img1} width={920} height={200} alt="" />
+
+## 实现 zustand
+
+核心原理：
+
+1. 基于`闭包`保存全局状态
+2. 基于`发布订阅模式`实现响应式
+
+```js
+// my-zustand.js
+const createStore = (createState) => {
+  let state;
+  const listeners = new Set();
+
+  const setState = (partial) => {
+    const nextState = typeof partial === 'function' ? partial(state) : partial;
+
+    if (!Object.is(nextState, state)) {
+      const previousState = state;
+      state = Object.assign({}, state, nextState);
+      listeners.forEach((listener) => listener(state, previousState));
+    }
+  };
+
+  const getState = () => state;
+
+  const subscribe = (listener) => {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+  };
+
+  const destory = () => {
+    listeners.clear();
+  };
+
+  const api = { setState, getState, subscribe, destory };
+
+  state = createState(setState, getState, api);
+
+  return api;
+};
+```
+
+状态变了如何触发页面渲染？使用`useState`
+
+```js
+// 模拟实现，有漏洞，仅用于表达思想
+const useStore = (api, selector) => {
+  const [, render] = useState(0);
+  useEffect(() => {
+    api.subscribe((state, previousState) => {
+      const newState = selector(state);
+      const oldState = selector(previousState);
+      if (newState !== oldState) {
+        render(Math.random());
+      }
+    });
+  }, []);
+
+  return selector(api.getState());
+};
+```
+
+```js
+export const create = (createState) => {
+  const api = createStore(createState);
+  return (selector) => useStore(api, selector);
+};
+```
+
+替换 create 函数后运行，功能正常
+
+```js
+// import { create } from 'zustand'; ---
+import { create } from './my-zustand'; // +++
+```
+
+## 使用 useSyncExternalStore 优化
+
+事实上，react 提供了一个 hook，用来订阅外部 store，store 变化以后会触发 rerender
+
+<Image src={img2} width={920} height={200} alt="" />
+
+重构 useStore
+
+```js
+const useStore = (api, selector) =>
+  useSyncExternalStore(api.subscribe, () => selector(api.getState()));
+```
+
+运行后功能正常
+
+## 最终源码
+
+```js
+// my-zustand.js
+import { useSyncExternalStore } from 'react';
+const createStore = (createState) => {
+  let state;
+  const listeners = new Set();
+
+  const setState = (partial) => {
+    const nextState = typeof partial === 'function' ? partial(state) : partial;
+
+    if (!Object.is(nextState, state)) {
+      const previousState = state;
+      state = Object.assign({}, state, nextState);
+      listeners.forEach((listener) => listener(state, previousState));
+    }
+  };
+
+  const getState = () => state;
+
+  const subscribe = (listener) => {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+  };
+
+  const destory = () => {
+    listeners.clear();
+  };
+
+  const api = { setState, getState, subscribe, destory };
+
+  state = createState(setState, getState, api);
+
+  return api;
+};
+
+const useStore = (api, selector) =>
+  useSyncExternalStore(api.subscribe, () => selector(api.getState()));
+
+export const create = (createState) => {
+  const api = createStore(createState);
+  return (selector) => useStore(api, selector);
+};
+```
