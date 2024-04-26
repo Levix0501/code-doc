@@ -34,6 +34,10 @@
       "module": {
         "title": "模块化",
         "href": "/front-end-engineering/module/introduction"
+      },
+      "package-managers": {
+        "title": "包管理器",
+        "href": "/package-managers/npm/introduction"
       }
     }
   },
@@ -47,24 +51,7 @@
       }
     }
   },
-  "package-managers": {
-    "title": "包管理器",
-    "type": "menu",
-    "items": {
-      "npm": {
-        "title": "npm",
-        "href": "/package-managers/npm/introduction"
-      },
-      "yarn": {
-        "title": "yarn",
-        "href": "/package-managers/npm/introduction"
-      },
-      "pnpm": {
-        "title": "pnpm",
-        "href": "/package-managers/npm/introduction"
-      }
-    }
-  },
+
   "leetcode": {
     "title": "Leetcode",
     "type": "page"
