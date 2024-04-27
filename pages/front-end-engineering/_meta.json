@@ -2,5 +2,9 @@
   "module": {
     "type": "page",
     "display": "hidden"
+  },
+  "package-managers": {
+    "type": "page",
+    "display": "hidden"
   }
 }

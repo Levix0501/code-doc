@@ -1,6 +1,6 @@
 {
   "index": {
-    "type": "page",
+    "title": "前端导航",
     "display": "hidden"
   },
   "javascript": {
@@ -37,7 +37,7 @@
       },
       "package-managers": {
         "title": "包管理器",
-        "href": "/package-managers/npm/introduction"
+        "href": "/front-end-engineering/package-managers/npm/introduction"
       }
     }
   },

@@ -16,6 +16,9 @@ const config: DocsThemeConfig = {
     );
   },
   sidebar: { defaultMenuCollapseLevel: 1, toggleButton: true },
+  footer: {
+    text: 'Copyright © 2024 Levix',
+  },
 };
 
 export default config;
