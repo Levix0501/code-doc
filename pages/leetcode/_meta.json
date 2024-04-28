@@ -1,4 +1,6 @@
 {
-  "index": "简介",
-  "binary-tree": "二叉树"
+  "binary-tree": {
+    "type": "page",
+    "display": "hidden"
+  }
 }

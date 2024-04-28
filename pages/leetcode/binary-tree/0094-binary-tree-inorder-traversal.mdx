@@ -1,0 +1,83 @@
+# 94. 二叉树的中序遍历
+
+[题目链接](https://leetcode.cn/problems/binary-tree-inorder-traversal/description/)
+
+## 题目大意
+
+输出二叉树的中序遍历
+
+## 思路与代码
+
+### 方法一：递归
+
+按照`左-根-右`顺序递归遍历即可
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+var inorderTraversal = function (root) {
+  const ret = [];
+
+  const inorder = (node) => {
+    if (!node) return;
+    inorder(node.left);
+    ret.push(node.val);
+    inorder(node.right);
+  };
+
+  dfs(root);
+
+  return ret;
+};
+```
+
+- 空间复杂度：O(n)
+- 时间复杂度：O(n)
+
+### 方法二：迭代
+
+借助栈进行迭代
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+var inorderTraversal = function (root) {
+  const ret = [];
+  const stack = [];
+
+  while (root || stack.length > 0) {
+    while (root) {
+      stack.push(root);
+      root = root.left;
+    }
+    root = stack.pop();
+    ret.push(root.val);
+    root = root.right;
+  }
+
+  return ret;
+};
+```
+
+- 空间复杂度：O(n)
+- 时间复杂度：O(n)

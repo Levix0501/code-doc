@@ -51,12 +51,16 @@
       }
     }
   },
-
   "leetcode": {
     "title": "Leetcode",
-    "type": "page"
+    "type": "menu",
+    "items": {
+      "binary-tree": {
+        "title": "二叉树",
+        "href": "/leetcode/binary-tree/0094-binary-tree-inorder-traversal"
+      }
+    }
   },
-
   "rust": {
     "title": "Rust",
     "type": "menu",
