@@ -1,0 +1,75 @@
+# 100.相同的树
+
+[题目链接](https://leetcode.cn/problems/same-tree/description/)
+
+## 题目大意
+
+比较两棵二叉树是否相同
+
+## 思路与代码
+
+### 方法一：深度优先搜索
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} p
+ * @param {TreeNode} q
+ * @return {boolean}
+ */
+var isSameTree = function (p, q) {
+  if (!p && !q) return true;
+  if (!p || !q) return false;
+  if (p.val !== q.val) return false;
+  return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+};
+```
+
+- 空间复杂度：O(min(m, n)) m 和 n 分别为两棵树的节点数
+- 时间复杂度：O(min(m, n)) m 和 n 分别为两棵树的节点数
+
+### 方法二：广度优先搜索
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} p
+ * @param {TreeNode} q
+ * @return {boolean}
+ */
+var isSameTree = function (p, q) {
+  const queue1 = [p];
+  const queue2 = [q];
+
+  while (queue1.length > 0 && queue2.length > 0) {
+    const n1 = queue1.pop();
+    const n2 = queue2.pop();
+    if (!n1 && !n2) continue;
+    if (!n1 || !n2) return false;
+    if (n1.val !== n2.val) return false;
+    queue1.push(n1.left);
+    queue1.push(n1.right);
+    queue2.push(n2.left);
+    queue2.push(n2.right);
+  }
+
+  return queue1.length === 0 && queue2.length === 0;
+};
+```
+
+- 空间复杂度：O(min(m, n)) m 和 n 分别为两棵树的节点数
+- 时间复杂度：O(min(m, n)) m 和 n 分别为两棵树的节点数
