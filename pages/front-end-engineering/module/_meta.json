@@ -2,5 +2,6 @@
   "introduction": "概述",
   "commonjs": "CommonJS 介绍",
   "node-cmj": "Node 如何实现 CommonJS",
-  "esmodule": "ES Module 介绍"
+  "esmodule": "ES Module 介绍",
+  "esm-import-export": "ESM 的导入和导出"
 }
