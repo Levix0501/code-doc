@@ -1,1 +1,32 @@
 # ESM 的导入和导出
+
+## ESM 的导出
+
+### 命名导出（每个模块包含任意数量）
+
+```js
+// 导出单个特性
+export let name1, name2, …, nameN; // also var, const
+export let name1 = …, name2 = …, …, nameN; // also var, const
+export function FunctionName(){...}
+export class ClassName {...}
+
+// 导出列表
+export { name1, name2, …, nameN };
+
+// 重命名导出
+export { variable1 as name1, variable2 as name2, …, nameN };
+
+// 解构导出并重命名
+export const { name1, name2: bar } = o;
+```
+
+### 默认导出（每个模块包含一个）
+
+```js
+// 默认导出
+export default expression;
+export default function (…) { … } // also class, function*
+export default function name1(…) { … } // also class, function*
+export { name1 as default, … };
+```
