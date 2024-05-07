@@ -1,12 +1,62 @@
 # 原型和原型链
 
-## 原型
-
-JS 中是使用构造函数来创建对象的，构造函数本身也是一个对象，它的`prototype`属性指向一个对象，这个对象包含了可以由该构造函数的实例共享的属性和方法。
-
-由构造函数创建的实例对象存在一个名为`__proto__`的属性，指向其构造函数的`prototype`属性指向的对象，该对象就称为实例的原型
-。
-
 ## 原型链
 
-当访问一个对象的属性时，如果该对象内部不存在此属性，JS 引擎就会去它的原型对象上找这个属性，如果找不到，就会去原型对象的原型对象上寻找，如此形成了所谓的原型链。原型链的终点时是`Object.prototype`，该对象的`__proto__`指向`null`。
+### 概念
+
+对象的构造函数的 `prototype` 属性和对象的 `__proto__` 属性指向同一个对象，称为原型对象，原型对象本身也有自己的原型对象，由此层层向上产生了一个链表称为原型链，其终点为 `Object.prototype` 对象，该对象的原型为 `null`
+
+### 优缺点
+
+#### 优点
+
+1. 访问对象的属性或方法时，如果对象内部不存在，JS 引擎会沿着原型链向上查找，直到找到或到达原型链的终点
+2. 原型链可以避免在每个对象上复制一份相同的属性和方法，从而节省内存
+
+#### 缺点
+
+1. 在原型链上查找属性和方法比较耗时，对性能有副作用
+2. 试图访问不存在的属性会遍历整个原型链
+3. 如果原型链上的某个属性被修改了，那么继承自该原型的对象有可能会受到影响
+
+### 应用场景
+
+1. Vue 2 中使用 Vue.use 安装插件，比如 Vue.use(Router)，可以在全局使用 this.$router
+2. 数组可以调用 Array.prototype 上的方法
+3. 通过原型链可以实现委托继承
+
+### 拓展
+
+1. `__proto__` 属性已从 ECMA 标准中移除
+2. 遵循 ECMAScript 标准，符号 `someObject.[[Prototype]]` 用于标识 someObject 的原型
+3. 可以通过 `Object.getPrototypeOf()` 来获取对象的原型
+
+## instanceof 运算符
+
+### 概念
+
+`instanceof` 运算符用于检测右侧构造函数的原型对象是否出现在左侧对象的原型链上
+
+### 缺点
+
+如果原型链很深，查询效率会较低
+
+### 拓展
+
+- `instanceof` 的左侧只能是对象，不能是基本类型数据
+
+#### 手写 instanceof
+
+通过 `Object.getPrototypeof()` 获取对象的原型，遍历原型链，判断右侧构造函数的原型对象是否出现在原型链上
+
+```js
+const myInstanceof = (left, right) => {
+  const prototype = right.prototype;
+  let proto = Object.getPrototypeOf(left);
+  while (proto) {
+    if (proto === prototype) return true;
+    proto = Object.getPrototypeOf(proto);
+  }
+  return false;
+};
+```
