@@ -1,16 +1,16 @@
-# 二叉树的中序遍历
+# 144. 二叉树的前序遍历
 
-[题目链接](https://leetcode.cn/problems/binary-tree-inorder-traversal/description/)
+[题目链接](https://leetcode.cn/problems/binary-tree-preorder-traversal/description/)
 
 ## 题目大意
 
-输出二叉树的中序遍历
+输出二叉树的前序遍历
 
 ## 思路与代码
 
 ### 方法一：递归
 
-按照`左-根-右`顺序递归遍历即可
+按照`根-左-右`顺序递归遍历即可
 
 ```js
 /**
@@ -25,17 +25,17 @@
  * @param {TreeNode} root
  * @return {number[]}
  */
-var inorderTraversal = function (root) {
+var preorderTraversal = function (root) {
   const ret = [];
 
-  const inorder = (node) => {
-    if (!node) return;
-    inorder(node.left);
+  const preorder = (node) => {
+    if (!node) return null;
     ret.push(node.val);
-    inorder(node.right);
+    preorder(node.left);
+    preorder(node.right);
   };
 
-  dfs(root);
+  preorder(root);
 
   return ret;
 };
@@ -61,20 +61,28 @@ var inorderTraversal = function (root) {
  * @param {TreeNode} root
  * @return {number[]}
  */
-var inorderTraversal = function (root) {
+var preorderTraversal = function (root) {
+  if (!root) return [];
   const ret = [];
-  const stack = [];
-
-  while (root || stack.length > 0) {
-    while (root) {
-      stack.push(root);
-      root = root.left;
+  const stack = [root];
+  while (stack.length > 0) {
+    let node = stack[stack.length - 1];
+    while (node) {
+      ret.push(node.val);
+      if (node.left) {
+        stack.push(node.left);
+      }
+      node = node.left;
     }
-    root = stack.pop();
-    ret.push(root.val);
-    root = root.right;
-  }
 
+    while (stack.length > 0) {
+      node = stack.pop();
+      if (node.right) {
+        stack.push(node.right);
+        break;
+      }
+    }
+  }
   return ret;
 };
 ```

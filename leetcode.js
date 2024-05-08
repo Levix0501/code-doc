@@ -1,44 +1,39 @@
-/**
- * // Definition for a Node.
- * function Node(val, left, right, next) {
- *    this.val = val === undefined ? null : val;
- *    this.left = left === undefined ? null : left;
- *    this.right = right === undefined ? null : right;
- *    this.next = next === undefined ? null : next;
- * };
- */
+function TreeNode(val, left, right) {
+  this.val = val === undefined ? 0 : val;
+  this.left = left === undefined ? null : left;
+  this.right = right === undefined ? null : right;
+}
 
 /**
- * @param {Node} root
- * @return {Node}
+ * @param {TreeNode} root
+ * @return {number[]}
  */
-var connect = function (root) {
-  if (!root) return null;
 
-  let nextStart = root;
-  let last;
-  const handle = (node) => {
-    if (!node) return;
-    if (!nextStart) {
-      nextStart = node;
-    }
-    if (last) {
-      last.next = node;
-    }
-    last = node;
-  };
+const root = new TreeNode(1, undefined, new TreeNode(2, new TreeNode(3)));
 
-  while (nextStart) {
-    let node = nextStart;
-    nextStart = null;
-    last = null;
-
+var preorderTraversal = function (root) {
+  if (!root) return [];
+  const ret = [];
+  const stack = [root];
+  while (stack.length > 0) {
+    let node = stack[stack.length - 1];
     while (node) {
-      handle(node.left);
-      handle(node.right);
-      node = node.next;
+      ret.push(node.val);
+      if (node.left) {
+        stack.push(node.left);
+      }
+      node = node.left;
+    }
+
+    while (stack.length > 0) {
+      node = stack.pop();
+      if (node.right) {
+        stack.push(node.right);
+        break;
+      }
     }
   }
-
-  return root;
+  return ret;
 };
+
+preorderTraversal(root);
