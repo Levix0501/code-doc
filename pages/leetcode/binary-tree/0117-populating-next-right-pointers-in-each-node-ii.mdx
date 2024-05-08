@@ -1,0 +1,106 @@
+# 116.填充每个节点的下一个右侧节点指针
+
+[题目链接](https://leetcode.cn/problems/populating-next-right-pointers-in-each-node-ii/description/)
+
+## 题目大意
+
+让一个二叉树的每个节点的 next 属性指向其同层右侧节点，若无右侧节点，指向 null
+
+## 思路与代码
+
+### 方法一：广度优先搜索
+
+```js
+/**
+ * // Definition for a Node.
+ * function Node(val, left, right, next) {
+ *    this.val = val === undefined ? null : val;
+ *    this.left = left === undefined ? null : left;
+ *    this.right = right === undefined ? null : right;
+ *    this.next = next === undefined ? null : next;
+ * };
+ */
+
+/**
+ * @param {Node} root
+ * @return {Node}
+ */
+var connect = function (root) {
+  if (!root) return null;
+
+  const queue = [root];
+  while (queue.length > 0) {
+    const n = queue.length;
+    for (let i = 0; i < n; i++) {
+      const node = queue.shift();
+      if (i < n - 1) {
+        node.next = queue[0];
+      }
+
+      if (node.left) {
+        queue.push(node.left);
+      }
+
+      if (node.right) {
+        queue.push(node.right);
+      }
+    }
+  }
+  return root;
+};
+```
+
+- 空间复杂度：O(n) n 为节点数，理论上队列最多时存储最下面一层共 n/2 个节点
+- 时间复杂度：O(n) n 为节点数
+
+### 方法二：利用上层节点的 next 属性
+
+```js
+/**
+ * // Definition for a Node.
+ * function Node(val, left, right, next) {
+ *    this.val = val === undefined ? null : val;
+ *    this.left = left === undefined ? null : left;
+ *    this.right = right === undefined ? null : right;
+ *    this.next = next === undefined ? null : next;
+ * };
+ */
+
+/**
+ * @param {Node} root
+ * @return {Node}
+ */
+var connect = function (root) {
+  if (!root) return null;
+
+  let nextStart = root;
+  let last;
+  const handle = (node) => {
+    if (!node) return;
+    if (!nextStart) {
+      nextStart = node;
+    }
+    if (last) {
+      last.next = node;
+    }
+    last = node;
+  };
+
+  while (nextStart) {
+    let node = nextStart;
+    nextStart = null;
+    last = null;
+
+    while (node) {
+      handle(node.left);
+      handle(node.right);
+      node = node.next;
+    }
+  }
+
+  return root;
+};
+```
+
+- 空间复杂度：O(1)
+- 时间复杂度：O(n) n 为节点数
