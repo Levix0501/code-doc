@@ -1,3 +1,16 @@
+# 翻转二叉树
+
+[题目链接](https://leetcode.cn/problems/invert-binary-tree/description/)
+
+## 题目大意
+
+让二叉树的每个节点的左右子树调换位置
+
+## 思路与代码
+
+### 递归
+
+```js
 /**
  * Definition for a binary tree node.
  * function TreeNode(val, left, right) {
@@ -15,3 +28,7 @@ var invertTree = function (root) {
   [root.left, root.right] = [invertTree(root.right), invertTree(root.left)];
   return root;
 };
+```
+
+- 空间复杂度：O(h) h 为树的高度
+- 时间复杂度：O(n)
