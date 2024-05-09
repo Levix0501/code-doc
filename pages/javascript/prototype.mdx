@@ -6,14 +6,12 @@
 
 对象的构造函数的 `prototype` 属性和对象的 `__proto__` 属性指向同一个对象，称为原型对象，原型对象本身也有自己的原型对象，由此层层向上产生了一个链表称为原型链，其终点为 `Object.prototype` 对象，该对象的原型为 `null`
 
-### 优缺点
-
-#### 优点
+### 特点
 
 1. 访问对象的属性或方法时，如果对象内部不存在，JS 引擎会沿着原型链向上查找，直到找到或到达原型链的终点
 2. 原型链可以避免在每个对象上复制一份相同的属性和方法，从而节省内存
 
-#### 缺点
+### 注意点
 
 1. 在原型链上查找属性和方法比较耗时，对性能有副作用
 2. 试图访问不存在的属性会遍历整个原型链
@@ -23,7 +21,6 @@
 
 1. Vue 2 中使用 Vue.use 安装插件，比如 Vue.use(Router)，可以在全局使用 this.$router
 2. 数组可以调用 Array.prototype 上的方法
-3. 通过原型链可以实现委托继承
 
 ### 拓展
 
@@ -37,7 +34,7 @@
 
 `instanceof` 运算符用于检测右侧构造函数的原型对象是否出现在左侧对象的原型链上
 
-### 缺点
+### 注意点
 
 如果原型链很深，查询效率会较低
 
@@ -59,4 +56,36 @@ const myInstanceof = (left, right) => {
   }
   return false;
 };
+```
+
+## new 运算符
+
+### 概念
+
+`new` 运算符用于创建用户定义的对象类型的实例或具有构造函数的内置对象的实例
+
+### 中间过程
+
+当使用 new 调用函数时，该函数将被当作构造函数。new 将执行以下操作：
+
+1. 创建一个空的简单 JS 对象 `newInstance`，其 `[[prototype]]` 指向 `Object.prototype`
+2. 若构造函数的 prototype 是一个对象，那么 `newInstance` 的 `[[prototype]]` 改为指向该对象
+3. 使用给定参数执行构造函数，并且构造函数中的所有 `this` 引用都指向 `newInstance`
+4. 如果构造函数返回非原始值，那么该返回值成为整个 `new` 表达式的结果；否则，`newInstance` 作为 `new` 表达式的结果返回
+
+### 手写 new
+
+```js
+function myNew(constructor, ...args) {
+  if (typeof constructor !== 'function') {
+    console.error('Type Error');
+    return;
+  }
+  const newInstance = Object.create(constructor.prototype);
+  const result = constructor.apply(newInstance, args);
+  if (typeof result === 'object' || typeof result === 'function') {
+    return result;
+  }
+  return newInstance;
+}
 ```
