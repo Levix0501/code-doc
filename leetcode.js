@@ -8,10 +8,20 @@
  */
 /**
  * @param {TreeNode} root
- * @return {TreeNode}
+ * @return {number[]}
  */
-var invertTree = function (root) {
-  if (!root) return null;
-  [root.left, root.right] = [invertTree(root.right), invertTree(root.left)];
-  return root;
+var preorderTraversal = function (root) {
+  const ret = [];
+  const stack = [];
+  let node = root;
+  while (node || stack.length > 0) {
+    while (node) {
+      ret.push(node.val);
+      stack.push(node);
+      node = node.left;
+    }
+    node = stack.pop();
+    node = node.right;
+  }
+  return ret;
 };

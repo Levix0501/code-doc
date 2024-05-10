@@ -62,26 +62,17 @@ var preorderTraversal = function (root) {
  * @return {number[]}
  */
 var preorderTraversal = function (root) {
-  if (!root) return [];
   const ret = [];
-  const stack = [root];
-  while (stack.length > 0) {
-    let node = stack[stack.length - 1];
+  const stack = [];
+  let node = root;
+  while (node || stack.length > 0) {
     while (node) {
       ret.push(node.val);
-      if (node.left) {
-        stack.push(node.left);
-      }
+      stack.push(node);
       node = node.left;
     }
-
-    while (stack.length > 0) {
-      node = stack.pop();
-      if (node.right) {
-        stack.push(node.right);
-        break;
-      }
-    }
+    node = stack.pop();
+    node = node.right;
   }
   return ret;
 };

@@ -1,4 +1,5 @@
 {
   "prototype": "原型和原型链",
-  "scope": "作用域"
+  "scope": "作用域",
+  "event-loop": "事件循环"
 }
