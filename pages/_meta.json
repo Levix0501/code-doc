@@ -51,7 +51,7 @@
       }
     }
   },
-  "leetcode1": {
+  "leetcode": {
     "title": "Leetcode",
     "type": "menu",
     "items": {

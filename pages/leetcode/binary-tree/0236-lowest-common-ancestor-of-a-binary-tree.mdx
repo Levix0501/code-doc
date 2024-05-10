@@ -1,0 +1,104 @@
+# 二叉树的公共祖先
+
+[题目链接](https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/description/)
+
+## 题目大意
+
+找到两个节点最近的公共祖先节点
+
+## 思路与代码
+
+### 深度优先搜索
+
+1. 对于某个节点 x，设 lx 表示其左子树中包含节点 p 或 q，rx 表示其右子树中包含节点 p 或 q
+2. `(lx && rx) || ((x === p || x === q) && (lx || rx))` 成立时表示 x 为 p 和 q 的公共祖先
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @param {TreeNode} p
+ * @param {TreeNode} q
+ * @return {TreeNode}
+ */
+var lowestCommonAncestor = function (root, p, q) {
+  let ret;
+  const dfs = (node) => {
+    if (!node) return false;
+    const l = dfs(node.left);
+    const r = dfs(node.right);
+    if ((l && r) || ((node === p || node === q) && (l || r))) {
+      ret = node;
+    }
+    return l || r || node === p || node === q;
+  };
+  dfs(root);
+  return ret;
+};
+```
+
+- 空间复杂度：O(h) h 为树的高度
+- 时间复杂度：O(n)
+
+### 记录每个节点的父节点
+
+1. 使用 Map 记录每个节点的父节点
+2. 从 p 开始向 root 遍历，使用 set 记录路径上的节点
+3. 从 q 开始向 root 遍历，如果路径上第一次出现 set 中已经保存的节点，该节点即为最近公共祖先
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @param {TreeNode} p
+ * @param {TreeNode} q
+ * @return {TreeNode}
+ */
+var lowestCommonAncestor = function (root, p, q) {
+  const parentMap = new Map();
+
+  const dfs = (node) => {
+    if (!node) return false;
+    if (node.left) {
+      parentMap.set(node.left.val, node);
+    }
+    if (node.right) {
+      parentMap.set(node.right.val, node);
+    }
+    dfs(node.left);
+    dfs(node.right);
+  };
+  dfs(root);
+
+  const set = new Set();
+  let node = p;
+  while (node) {
+    set.add(node);
+    node = parentMap.get(node.val);
+  }
+  node = q;
+  while (node) {
+    if (set.has(node)) {
+      return node;
+    }
+    node = parentMap.get(node.val);
+  }
+
+  return ret;
+};
+```
+
+- 空间复杂度：O(n)
+- 时间复杂度：O(n)

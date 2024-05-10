@@ -1,7 +1,11 @@
 {
-  "0094-binary-tree-inorder-traversal": "94.二叉树的中序遍历",
-  "0100-same-tree": "100.相同的树",
-  "0108-convert-sorted-array-to-binary-search-tree": "108.将有序数组转换为二叉搜索树",
-  "0116-populating-next-right-pointers-in-each-node": "116.填充每个节点的下一个右侧节点指针",
-  "0116-populating-next-right-pointers-in-each-node-ii": "117.填充每个节点的下一个右侧节点指针 II"
+  "0094-binary-tree-inorder-traversal": "0094.二叉树的中序遍历",
+  "0100-same-tree": "0100.相同的树",
+  "0108-convert-sorted-array-to-binary-search-tree": "0108.将有序数组转换为二叉搜索树",
+  "0116-populating-next-right-pointers-in-each-node": "0116.填充每个节点的下一个右侧节点指针",
+  "0117-populating-next-right-pointers-in-each-node-ii": "0117.填充每个节点的下一个右侧节点指针 II",
+  "0144-binary-tree-preorder-traversal": "0144.二叉树的前序遍历",
+  "0222-count-complete-tree-nodes": "0222.完全二叉树的节点个数",
+  "0226-invert-binary-tree": "0226.翻转二叉树",
+  "0236-lowest-common-ancestor-of-a-binary-tree": "0236.二叉树的公共祖先"
 }
