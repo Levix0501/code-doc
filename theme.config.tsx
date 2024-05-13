@@ -6,18 +6,23 @@ const config: DocsThemeConfig = {
     link: 'https://github.com/Levix0501/code-doc',
   },
   docsRepositoryBase: 'https://github.com/Levix0501/code-doc/tree/master',
-  head: function useHead() {
-    const { title } = useConfig();
+  // head: function useHead() {
+  //   const { title } = useConfig();
 
-    return (
-      <>
-        <title>{title}</title>
-      </>
-    );
-  },
+  //   return (
+  //     <>
+  //       <title>{title}</title>
+  //     </>
+  //   );
+  // },
   sidebar: { defaultMenuCollapseLevel: 1, toggleButton: true },
   footer: {
     text: 'Copyright © 2024 Levix',
+  },
+  useNextSeoProps() {
+    return {
+      titleTemplate: '%s - FECoder',
+    };
   },
 };
 

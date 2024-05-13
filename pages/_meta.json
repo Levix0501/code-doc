@@ -3,13 +3,13 @@
     "title": "前端导航",
     "display": "hidden"
   },
-  "javascript": {
-    "title": "JavaScript",
+  "basics": {
+    "title": "必知必会",
     "type": "menu",
     "items": {
-      "prototype": {
-        "title": "原型和原型链",
-        "href": "/javascript/prototype"
+      "javascript": {
+        "title": "JavaScript",
+        "href": "/basics/javascript/prototype"
       }
     }
   },
