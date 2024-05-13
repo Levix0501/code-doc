@@ -1,44 +1,86 @@
-/**
- * Definition for a binary tree node.
- * function TreeNode(val, left, right) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.left = (left===undefined ? null : left)
- *     this.right = (right===undefined ? null : right)
- * }
- */
-/**
- * @param {TreeNode} root
- * @return {number}
- */
-var sumOfLeftLeaves = function (root) {
-  if (!root) return 0;
-  let sum = 0;
-  const queue = [root];
-  while (queue.length) {
-    const n = queue.length;
-    for (let i = 0; i < n; i++) {
-      const node = queue.shift();
-      if (node.left && !node.left.left && !node.left.right) {
-        sum += node.left.val;
-      }
-      if (node.left) queue.push(node.left);
-      if (node.right) queue.push(node.right);
+// /**
+//  * Definition for a binary tree node.
+//  * function TreeNode(val, left, right) {
+//  *     this.val = (val===undefined ? 0 : val)
+//  *     this.left = (left===undefined ? null : left)
+//  *     this.right = (right===undefined ? null : right)
+//  * }
+//  */
+// /**
+//  * @param {TreeNode} root
+//  * @param {number} key
+//  * @return {TreeNode}
+//  */
+// var deleteNode = function (root, key) {
+//   if (!root) return root;
+
+//   if (key < root.val) {
+//     root.left = deleteNode(root.left, key);
+//     return root;
+//   }
+
+//   if (key > root.val) {
+//     root.right = deleteNode(root.right, key);
+//     return root;
+//   }
+
+//   if (!root.left && !root.right) return null;
+
+//   if (!root.left) return root.right;
+
+//   if (!root.right) return root.left;
+
+//   let successor = root.right;
+//   while (successor.left) {
+//     successor = successor.left;
+//   }
+//   root.right = deleteNode(root.right, successor.val);
+//   successor.left = root.left;
+//   successor.right = root.right;
+//   return successor;
+// };
+
+var deleteNode = function (root, key) {
+  let cur = root;
+  let curParent = null;
+  while (cur && cur.val !== key) {
+    curParent = cur;
+    if (key < cur.val) {
+      cur = cur.left;
+    } else {
+      cur = cur.right;
     }
   }
-  return sum;
-};
+  if (!cur) return root;
 
-// var sumOfLeftLeaves = function (root) {
-//   let sum = 0;
-//   const dfs = (node) => {
-//     if (!node) return;
-//     const left = node.left;
-//     if (left && !left.left && !left.right) {
-//       sum += left.val;
-//     }
-//     dfs(node.left);
-//     dfs(node.right);
-//   };
-//   dfs(root);
-//   return sum;
-// };
+  if (!cur.left && !cur.right) {
+    cur = null;
+  } else if (!cur.left) {
+    cur = cur.right;
+  } else if (!cur.right) {
+    cur = cur.left;
+  } else {
+    let successorParent = cur;
+    let successor = cur.right;
+    while (successor.left) {
+      successorParent = successor;
+      successor = successor.left;
+    }
+    if (successorParent === cur) {
+      successorParent.right = successor.right;
+    } else {
+      successorParent.left = successor.right;
+    }
+    successor.left = cur.left;
+    successor.right = cur.right;
+    cur = successor;
+  }
+
+  if (!curParent) return cur;
+  if (curParent.left && curParent.left.val === key) {
+    curParent.left = cur;
+  } else {
+    curParent.right = cur;
+  }
+  return root;
+};
