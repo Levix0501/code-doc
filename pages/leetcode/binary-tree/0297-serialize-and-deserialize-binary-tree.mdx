@@ -26,9 +26,9 @@
  * @return {string}
  */
 var serialize = function (root) {
+  let ret = [];
   const queue = [root];
-  const ret = [];
-  while (queue.length > 0) {
+  while (queue.length) {
     const n = queue.length;
     for (let i = 0; i < n; i++) {
       const node = queue.shift();
@@ -44,6 +44,79 @@ var serialize = function (root) {
   while (ret[ret.length - 1] === null) {
     ret.pop();
   }
+  return ret.toString();
+};
+
+/**
+ * Decodes your encoded data to tree.
+ *
+ * @param {string} data
+ * @return {TreeNode}
+ */
+var deserialize = function (data) {
+  if (!data.length) return null;
+  const arr = data.split(',').map((e) => (e ? new TreeNode(Number(e)) : null));
+  const root = arr.shift();
+  let queue = [root];
+  let nextQueue = [];
+  while (arr.length) {
+    for (let i = 0; i < queue.length; i++) {
+      if (arr[0]) {
+        queue[i].left = arr[0];
+        nextQueue.push(arr[0]);
+      }
+      arr.shift();
+      if (arr[0]) {
+        queue[i].right = arr[0];
+        nextQueue.push(arr[0]);
+      }
+      arr.shift();
+    }
+    queue = nextQueue;
+    nextQueue = [];
+  }
+  return root;
+};
+
+/**
+ * Your functions will be called as such:
+ * deserialize(serialize(root));
+ */
+```
+
+- 空间复杂度：O(n)
+- 时间复杂度：O(n)
+
+### 深度优先遍历
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+
+/**
+ * Encodes a tree to a single string.
+ *
+ * @param {TreeNode} root
+ * @return {string}
+ */
+var serialize = function (root) {
+  return se(root, '');
+};
+
+const se = (node, ret) => {
+  if (!node) {
+    ret += 'None,';
+  } else {
+    ret += node.val + ',';
+    ret = se(node.left, ret);
+    ret = se(node.right, ret);
+  }
+
   return ret;
 };
 
@@ -54,32 +127,20 @@ var serialize = function (root) {
  * @return {TreeNode}
  */
 var deserialize = function (data) {
-  if (data.length === 0) return null;
-  const root = new TreeNode(data[0]);
-  data.shift();
-  let queue = [root];
-  let nextQueue = [];
-  while (data.length > 0) {
-    for (let i = 0; i < queue.length; i++) {
-      if (typeof data[0] === 'number') {
-        const node = new TreeNode(data[0]);
-        queue[i].left = node;
-        nextQueue.push(node);
-      }
-      data.shift();
-      if (typeof data[0] === 'number') {
-        const node = new TreeNode(data[0]);
-        queue[i].right = node;
-        nextQueue.push(node);
-      }
-      data.shift();
-    }
-    queue = nextQueue;
-    nextQueue = [];
-  }
-  return root;
+  return de(data.split(','));
 };
 
+const de = (dataList) => {
+  if (dataList[0] === 'None') {
+    dataList.shift();
+    return null;
+  }
+  const root = new TreeNode(parseInt(dataList[0]));
+  dataList.shift();
+  root.left = de(dataList);
+  root.right = de(dataList);
+  return root;
+};
 /**
  * Your functions will be called as such:
  * deserialize(serialize(root));

@@ -1,86 +1,55 @@
-// /**
-//  * Definition for a binary tree node.
-//  * function TreeNode(val, left, right) {
-//  *     this.val = (val===undefined ? 0 : val)
-//  *     this.left = (left===undefined ? null : left)
-//  *     this.right = (right===undefined ? null : right)
-//  * }
-//  */
-// /**
-//  * @param {TreeNode} root
-//  * @param {number} key
-//  * @return {TreeNode}
-//  */
-// var deleteNode = function (root, key) {
-//   if (!root) return root;
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
 
-//   if (key < root.val) {
-//     root.left = deleteNode(root.left, key);
-//     return root;
-//   }
+/**
+ * Encodes a tree to a single string.
+ *
+ * @param {TreeNode} root
+ * @return {string}
+ */
+var serialize = function (root) {
+  return se(root, '');
+};
 
-//   if (key > root.val) {
-//     root.right = deleteNode(root.right, key);
-//     return root;
-//   }
-
-//   if (!root.left && !root.right) return null;
-
-//   if (!root.left) return root.right;
-
-//   if (!root.right) return root.left;
-
-//   let successor = root.right;
-//   while (successor.left) {
-//     successor = successor.left;
-//   }
-//   root.right = deleteNode(root.right, successor.val);
-//   successor.left = root.left;
-//   successor.right = root.right;
-//   return successor;
-// };
-
-var deleteNode = function (root, key) {
-  let cur = root;
-  let curParent = null;
-  while (cur && cur.val !== key) {
-    curParent = cur;
-    if (key < cur.val) {
-      cur = cur.left;
-    } else {
-      cur = cur.right;
-    }
-  }
-  if (!cur) return root;
-
-  if (!cur.left && !cur.right) {
-    cur = null;
-  } else if (!cur.left) {
-    cur = cur.right;
-  } else if (!cur.right) {
-    cur = cur.left;
+const se = (node, ret) => {
+  if (!node) {
+    ret += 'None,';
   } else {
-    let successorParent = cur;
-    let successor = cur.right;
-    while (successor.left) {
-      successorParent = successor;
-      successor = successor.left;
-    }
-    if (successorParent === cur) {
-      successorParent.right = successor.right;
-    } else {
-      successorParent.left = successor.right;
-    }
-    successor.left = cur.left;
-    successor.right = cur.right;
-    cur = successor;
+    ret += node.val + ',';
+    ret = se(node.left, ret);
+    ret = se(node.right, ret);
   }
 
-  if (!curParent) return cur;
-  if (curParent.left && curParent.left.val === key) {
-    curParent.left = cur;
-  } else {
-    curParent.right = cur;
+  return ret;
+};
+
+/**
+ * Decodes your encoded data to tree.
+ *
+ * @param {string} data
+ * @return {TreeNode}
+ */
+var deserialize = function (data) {
+  return de(data.split(','));
+};
+
+const de = (dataList) => {
+  if (dataList[0] === 'None') {
+    dataList.shift();
+    return null;
   }
+  const root = new TreeNode(parseInt(dataList[0]));
+  dataList.shift();
+  root.left = de(dataList);
+  root.right = de(dataList);
   return root;
 };
+/**
+ * Your functions will be called as such:
+ * deserialize(serialize(root));
+ */
