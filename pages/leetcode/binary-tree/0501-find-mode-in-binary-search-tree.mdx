@@ -1,0 +1,127 @@
+# 二叉搜索树中的众数
+
+[题目链接](https://leetcode.cn/problems/find-mode-in-binary-search-tree/description/)
+
+## 题目大意
+
+给定一棵二叉搜索树，找到树中的所有众数
+
+## 思路与代码
+
+### 方法一：Map 计数
+
+遍历二叉树，使用 Map 记录每个数字出现的个数
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+var findMode = function (root) {
+  const map = new Map();
+  const dfs = (node) => {
+    if (!node) return;
+    map.set(node.val, (map.get(node.val) ?? 0) + 1);
+    dfs(node.left);
+    dfs(node.right);
+  };
+  dfs(root);
+  let max = 0;
+  for (const item of map.values()) {
+    if (item > max) {
+      max = item;
+    }
+  }
+  const ret = [];
+  for (const [key, value] of map.entries()) {
+    if (max === value) {
+      ret.push(key);
+    }
+  }
+  return ret;
+};
+```
+
+- 空间复杂度：O(n)
+- 时间复杂度：O(n)
+
+### 方法二：利用有序数组找众数
+
+1. 利用有序数组找众数
+2. 二叉搜索树中序遍历为有序数组
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+
+var findMode = function (root) {
+  let base = 0,
+    count = 0,
+    maxCount = 0;
+  let ret = [];
+  const update = (x) => {
+    if (x === base) {
+      count++;
+    } else {
+      base = x;
+      count = 1;
+    }
+    if (count === maxCount) {
+      ret.push(base);
+    }
+
+    if (count > maxCount) {
+      maxCount = count;
+      ret = [base];
+    }
+  };
+
+  // Morris 算法：中序遍历
+  let cur = root;
+  let pre = null;
+  while (cur) {
+    if (!cur.left) {
+      update(cur.val);
+      pre = cur;
+      cur = cur.right;
+      continue;
+    }
+
+    pre = cur.left;
+    while (pre.right && pre.right !== cur) {
+      pre = pre.right;
+    }
+    if (pre.right) {
+      pre.right = null;
+      update(cur.val);
+      cur = cur.right;
+    } else {
+      pre.right = cur;
+      cur = cur.left;
+    }
+  }
+
+  return ret;
+};
+```
+
+- 空间复杂度：O(1)
+- 时间复杂度：O(n)
