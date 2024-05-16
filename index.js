@@ -1,14 +1,10 @@
-const a = () => {
-  Promise.resolve().then(() => {
-    console.log(3);
-  });
-};
+const a = (() => {
+  let n = 0;
+  return () => {
+    n++;
+    console.log(n);
+  };
+})();
 
-setTimeout(() => {
-  console.log(1);
-}, 0);
-
-Promise.resolve().then(() => {
-  console.log(2);
-  a();
-});
+a();
+a();

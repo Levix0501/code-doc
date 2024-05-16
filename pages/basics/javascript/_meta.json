@@ -2,5 +2,6 @@
   "prototype": "原型和原型链",
   "scope": "作用域",
   "event-loop": "事件循环",
-  "garbage-collection": "垃圾回收"
+  "garbage-collection": "垃圾回收",
+  "closure": "闭包"
 }

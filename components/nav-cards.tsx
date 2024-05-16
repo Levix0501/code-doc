@@ -18,7 +18,7 @@ export interface NavCardsProps {
 
 const NavCards = ({ list }: NavCardsProps) => {
   return (
-    <div className="mt-6 grid grid-cols-[repeat(3,1fr)] gap-2">
+    <div className="mt-6 grid grid-cols-[repeat(2,1fr)] lg:grid-cols-[repeat(3,1fr)] gap-2">
       {list.map(({ title, desc, icon, href }) => (
         <a key={title} href={href} target="_blank">
           <Card className="h-full">
