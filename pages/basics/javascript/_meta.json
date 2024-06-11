@@ -1,5 +1,7 @@
 {
   "prototype": "原型和原型链",
+  "instanceof": "instanceof 运算符",
+  "new": "new 运算符",
   "scope": "作用域",
   "event-loop": "事件循环",
   "garbage-collection": "垃圾回收",
